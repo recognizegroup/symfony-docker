@@ -32,3 +32,9 @@ RUN echo "file_uploads = On\n" \
          "post_max_size = 256M\n" \
          "max_execution_time = 30\n" \
          > /usr/local/etc/php/conf.d/uploads.ini
+
+# https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+RUN composer global require "hirak/prestissimo:^0.3" --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative \
+	&& composer clear-cache
