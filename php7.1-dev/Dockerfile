@@ -24,8 +24,8 @@ RUN pecl install -f xdebug \
     && echo "xdebug.remote_connect_back = On" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Install Node
-ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 8.6.0
+ENV NPM_CONFIG_LOGLEVEL notice
+ENV NODE_VERSION 8.9.1
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
