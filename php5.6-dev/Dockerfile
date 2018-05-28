@@ -1,4 +1,4 @@
-FROM php:7.1-apache
+FROM php:5.6-apache
 ADD apache2.conf /etc/apache2/apache2.conf
 ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
 ADD symfony.ini /usr/local/etc/php/conf.d/symfony.ini
@@ -15,6 +15,13 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
+
+RUN pecl install -f xdebug \
+    && pecl clear-cache \
+    && echo "zend_extension=$(ls /usr/local/lib/php/*/*/xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_enable = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_autostart = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_connect_back = On" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Install Node
 ENV NPM_CONFIG_LOGLEVEL notice
