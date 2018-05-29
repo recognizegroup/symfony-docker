@@ -16,7 +16,7 @@ RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer
 
-RUN pecl install -f xdebug \
+RUN pecl install -f xdebug-2.5.5 \
     && pecl clear-cache \
     && echo "zend_extension=$(ls /usr/local/lib/php/*/*/xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_enable = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
