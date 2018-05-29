@@ -4,7 +4,7 @@ ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
 ADD symfony.ini /usr/local/etc/php/conf.d/symfony.ini
 
 RUN apt-get update \
-        && apt-get install -y libicu-dev git wget libpng12-dev libjpeg62-turbo-dev \
+        && apt-get install -y libicu-dev git wget libpng-dev libjpeg62-turbo-dev \
         && apt-get clean \
         && rm -rf /var/lib/apt/lists/*
 
