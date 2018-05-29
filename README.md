@@ -1,23 +1,25 @@
 # symfony-docker
-Docker image tailed to run symfony application. Check https://hub.docker.com/r/jakubsacha/symfony-docker
+Docker image tailed to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
 
 ## What's here?
 
 This repository is a source code for following docker images that allow relatively easily work with symfony php framework. Included images:
 
-* jakubsacha/symfony-docker:php5
-* jakubsacha/symfony-docker:php5-dev
-* jakubsacha/symfony-docker:php7
-* jakubsacha/symfony-docker:php7-dev
-* jakubsacha/symfony-docker:php7.1
-* jakubsacha/symfony-docker:php7.1-dev
+* recognizebv/symfony-docker:php5.6
+* recognizebv/symfony-docker:php5.6-dev
+* recognizebv/symfony-docker:php7
+* recognizebv/symfony-docker:php7-dev
+* recognizebv/symfony-docker:php7.1
+* recognizebv/symfony-docker:php7.1-dev
+* recognizebv/symfony-docker:php7.2-sf4
+* recognizebv/symfony-docker:php7.2-sf4-dev
 
 ## What is the concept here?
 
 You use php-dev images to develop by mounting your local directory into machine.
 You use non-dev images to copy app code into image and then deploy your application to stage/live environments.
 
-## What is the difference between php5 and php5-dev?
+## What is the difference between php* and php*-dev?
 
 Non *dev* images are intended to be used in production. *Dev* images have xdebug installed additionally, so you can use it for debugging.
 
@@ -29,7 +31,7 @@ You can you this docker-compose.yml file to develop:
 
 ```
 www:
-  image: jakubsacha/symfony-docker:php5-dev
+  image: recognizebv/symfony-docker:php7.1-dev
   volumes:
     - ".:/var/www/html"
   ports:
@@ -64,7 +66,7 @@ path:  "php://stderr"
 You can build production ready image with dockerfile like this:
 
 ```
-FROM jakubsacha/symfony-docker:php7.1
+FROM recognizebv/symfony-docker:php7.1
 ADD . /var/www/html
 # Add your application build steps here, for example:
 # RUN ./var/www/html/web/bin/...
@@ -80,6 +82,8 @@ RUN rm -rf /var/www/html/web/config.php
 * opcache
 * pdo
 * pdo_mysql
+* zip
+* gd
 * xdebug (only in dev images)
 
 ## How do i install additional php extensions?
