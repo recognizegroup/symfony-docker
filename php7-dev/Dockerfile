@@ -10,7 +10,7 @@ RUN apt-get update \
 
 RUN docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install pdo pdo_mysql opcache intl zip gd \
-    && a2enmod rewrite \
+    && a2enmod rewrite headers \
     && mkdir /var/www/html/web
 
 RUN curl -sS https://getcomposer.org/installer | php \
