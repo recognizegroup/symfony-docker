@@ -2,6 +2,8 @@ FROM php:7.1-apache
 ADD apache2.conf /etc/apache2/apache2.conf
 ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
 ADD symfony.ini /usr/local/etc/php/conf.d/symfony.ini
+ADD mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
+RUN rm /etc/apache2/conf-available/security.conf && rm /etc/apache2/conf-enabled/security.conf
 
 RUN apt-get update \
     && apt-get install -y libicu-dev git wget libpng-dev libjpeg62-turbo-dev \
