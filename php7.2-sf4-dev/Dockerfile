@@ -2,6 +2,8 @@ FROM php:7.2-apache
 ADD apache2.conf /etc/apache2/apache2.conf
 ADD 000-default.conf /etc/apache2/sites-available/000-default.conf
 ADD symfony.ini /usr/local/etc/php/conf.d/symfony.ini
+ADD mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
+RUN rm /etc/apache2/conf-available/security.conf && rm /etc/apache2/conf-enabled/security.conf
 
 RUN apt-get update \
     && apt-get install -y libicu-dev git wget libpng-dev libjpeg62-turbo-dev \
@@ -33,7 +35,7 @@ RUN pecl install -f xdebug \
 
 # Install Node
 ENV NPM_CONFIG_LOGLEVEL notice
-ENV NODE_VERSION 8.9.1
+ENV NODE_VERSION 8.12.0
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
     && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
