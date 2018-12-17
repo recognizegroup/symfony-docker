@@ -31,7 +31,8 @@ RUN pecl install -f xdebug-2.5.5 \
     && echo "zend_extension=$(ls /usr/local/lib/php/*/*/xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_enable = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_autostart = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
-    && echo "xdebug.remote_connect_back = On" >> /usr/local/etc/php/conf.d/xdebug.ini
+    && echo "xdebug.remote_connect_back = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.coverage_enable = Off" >> /usr/local/etc/php/conf.d/xdebug.ini
 
 # Install Node
 ENV NPM_CONFIG_LOGLEVEL notice
