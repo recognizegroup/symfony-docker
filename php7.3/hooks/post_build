@@ -1,3 +1,4 @@
 #!/bin/bash
-docker build -f "${DOCKERFILE_PATH}.dev" -t "${IMAGE_NAME}-dev" .
+pwd
+docker build -f "${DOCKERFILE_PATH}/Dockerfile.dev" -t "${IMAGE_NAME}-dev" .
 docker push "${IMAGE_NAME}-dev"
