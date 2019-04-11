@@ -3,18 +3,7 @@ Docker image tailed to run symfony application. Check https://hub.docker.com/r/r
 
 ## What's here?
 
-This repository is a source code for following docker images that allow relatively easily work with symfony php framework. Included images:
-
-- [`php7.2-sf4` (*php7.2-sf4/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php7.2-sf4/Dockerfile)
-- [`php7.2-sf4-dev` (*php7.2-sf4-dev/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php7.2-sf4-dev/Dockerfile)
-- [`php7` (*php7/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php7/Dockerfile)
-- [`php7-dev` (*php7-dev/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php7-dev/Dockerfile)
-- [`php7.1` (*php7.1/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php7.1/Dockerfile)
-- [`php7.1-dev` (*php7.1-dev/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php7.1-dev/Dockerfile)
-- [`php7.0` (*php7.0/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php7.0/Dockerfile)
-- [`php7.0-dev` (*php7.0-dev/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php7.0-dev/Dockerfile)
-- [`php5.6` (*php5.6/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php5.6/Dockerfile)
-- [`php5.6-dev` (*php5.6-dev/Dockerfile*)](https://github.com/RecognizeBV/symfony-docker/blob/master/php5.6-dev/Dockerfile)
+This repository is a source code for following docker images that allow relatively easily work with symfony php framework.
 
 ## What is the concept here?
 

@@ -6,7 +6,7 @@ ADD mpm_prefork.conf /etc/apache2/mods-available/mpm_prefork.conf
 RUN rm /etc/apache2/conf-available/security.conf && rm /etc/apache2/conf-enabled/security.conf
 
 RUN apt-get update \
-    && apt-get install -y libicu-dev git wget libpng-dev libjpeg62-turbo-dev \
+    && apt-get install -y libicu-dev git wget unzip libpng-dev libjpeg62-turbo-dev libzip-dev \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
