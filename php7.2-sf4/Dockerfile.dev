@@ -1,4 +1,4 @@
-FROM recognizebv/symfony-docker:php7.2
+FROM recognizebv/symfony-docker:php7.2-sf4
 
 RUN pecl install -f xdebug \
     && pecl clear-cache \
