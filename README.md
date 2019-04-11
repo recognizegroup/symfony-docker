@@ -73,6 +73,7 @@ RUN rm -rf /var/www/html/web/config.php
 * opcache
 * pdo
 * pdo_mysql
+* pdo_pgsql
 * zip
 * gd
 * xdebug (only in dev images)
