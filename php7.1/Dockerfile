@@ -47,6 +47,10 @@ RUN echo "file_uploads = On\n" \
          "max_execution_time = 30\n" \
          > /usr/local/etc/php/conf.d/uploads.ini
 
+# General PHP settings
+RUN echo "display_errors = 0\n" \
+         > /usr/local/etc/php/conf.d/general.ini
+
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
 ENV COMPOSER_ALLOW_SUPERUSER 1
 
