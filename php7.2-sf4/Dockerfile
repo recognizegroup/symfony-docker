@@ -49,6 +49,7 @@ RUN echo "file_uploads = On\n" \
 
 # General PHP settings
 RUN echo "display_errors = 0\n" \
+         "display_startup_errors = 0" \
          > /usr/local/etc/php/conf.d/general.ini
 
 # https://getcomposer.org/doc/03-cli.md#composer-allow-superuser
