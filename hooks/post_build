@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 pwd
 docker build -f Dockerfile.dev -t "${IMAGE_NAME}-dev" .
 docker push "${IMAGE_NAME}-dev"
@@ -18,6 +20,6 @@ for version in "${node_versions[@]}"; do
 
   docker push "${IMAGE_NAME}-node${version}"
   docker push "${IMAGE_NAME}-dev-node${version}"
-  docker push "${IMAGE_NAME}-node${version_number}"
-  docker push "${IMAGE_NAME}-dev-node${version_number}"
+  docker push "${IMAGE_NAME}-node-${version_number}"
+  docker push "${IMAGE_NAME}-dev-node-${version_number}"
 done
