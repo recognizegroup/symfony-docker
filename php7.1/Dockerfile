@@ -32,11 +32,12 @@ RUN curl -sS https://getcomposer.org/installer | php \
 
 # Install Node
 ENV NPM_CONFIG_LOGLEVEL notice
-ENV NODE_VERSION 8.12.0
+ARG NODE_VERSION
+ENV NODE_VERSION=${NODE_VERSION:-v8.12.0}
 
-RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
-    && tar -xJf "node-v$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
-    && rm "node-v$NODE_VERSION-linux-x64.tar.xz" \
+RUN curl -SLO "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz" \
+    && tar -xJf "node-$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
+    && rm "node-$NODE_VERSION-linux-x64.tar.xz" \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs
 
 # Upload settings

@@ -2,3 +2,22 @@
 pwd
 docker build -f Dockerfile.dev -t "${IMAGE_NAME}-dev" .
 docker push "${IMAGE_NAME}-dev"
+
+node_versions=("" -v8.x -v10.x -v11.x -v12.x)
+for version in "${node_versions[@]}"; do
+  version_number=$(wget -qO- "https://nodejs.org/dist/latest${version}/" | sed -nE 's|.*>node-(.*)\-linux-x64.tar.xz</a>.*|\1|p')
+  version=${version:--latest}
+  # make tag for every version range and exact version
+  echo "s#${IMAGE_NAME}#${IMAGE_NAME}-node${version}#g"
+  sed "s#${IMAGE_NAME}#${IMAGE_NAME}-node${version}#g" Dockerfile.dev > "Dockerfile.dev.node${version}"
+
+  docker build -f Dockerfile -t "${IMAGE_NAME}-node${version}" --build-arg NODE_VERSION="${version_number}" .
+  docker build -f "Dockerfile.dev.node${version}" -t "${IMAGE_NAME}-dev-node${version}" --build-arg NODE_VERSION="${version_number}" .
+  docker tag "${IMAGE_NAME}-node${version}" "${IMAGE_NAME}-node-${version_number}"
+  docker tag "${IMAGE_NAME}-dev-node${version}" "${IMAGE_NAME}-dev-node-${version_number}"
+
+  docker push "${IMAGE_NAME}-node${version}"
+  docker push "${IMAGE_NAME}-dev-node${version}"
+  docker push "${IMAGE_NAME}-node${version_number}"
+  docker push "${IMAGE_NAME}-dev-node${version_number}"
+done
