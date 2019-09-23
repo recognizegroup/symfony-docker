@@ -3,6 +3,26 @@
 # symfony-docker
 Docker image made to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
 
+## Available variants
+- php7.3-node10-dev
+- php7.3-node10, 
+- php7.3-node8-dev
+- php7.3-node8
+- php7.2-node10-dev
+- php7.2-node10
+- php7.2-node8-dev
+- php7.2-node8
+- php7.1-node10-dev
+- php7.1-node10
+- php7.1-node8-dev
+- php7.1-node8
+- php7.0-node10-dev
+- php7.0-node10
+- php7.0-node8-dev
+- php7.0-node8
+
+[All tags](https://hub.docker.com/r/recognizebv/symfony-docker/tags)
+
 ## What's here?
 
 This repository is a source code for following docker images that allow relatively easily work with symfony php framework.
