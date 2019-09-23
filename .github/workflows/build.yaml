@@ -1,4 +1,4 @@
-name: Scheduled docker image build
+name: Build
 on:
   push:
   schedule:
