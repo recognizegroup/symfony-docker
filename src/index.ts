@@ -3,7 +3,6 @@ import {createClientV2} from 'docker-registry-client';
 import * as compareVersions from 'compare-versions';
 import * as Docker from 'dockerode';
 import axios from 'axios';
-import * as path from 'path';
 import {spawn} from 'child_process';
 
 (async () => {
@@ -40,7 +39,7 @@ async function buildImages(docker: Docker, phpVersion: PhpVersion, nodeVersions:
 }
 
 async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVersion: NodeVersion, debug: boolean) {
-    const imageName = 'recognizebvblaat/symfony-docker';
+    const imageName = 'recognizebv/symfony-docker';
     const tagName = `php${phpVersion.version}-node${nodeVersion.major}` + (debug ? '-dev' : '');
     const tag = imageName + ':' + tagName;
 
