@@ -1,5 +1,7 @@
+![Build status](https://github.com/RecognizeBV/symfony-docker/workflows/Build/badge.svg)
+
 # symfony-docker
-Docker image tailed to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
+Docker image made to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
 
 ## What's here?
 
