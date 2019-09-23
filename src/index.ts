@@ -7,19 +7,24 @@ import * as path from 'path';
 import {spawn} from 'child_process';
 
 (async () => {
-    const phpRegex = new RegExp('^([7-9]\\.\\d+)-apache$');
-    const client = createClientV2({'name': 'php'});
-    const phpVersions = (await getTags(client)).tags.map(it => {
-        const match = phpRegex.exec(it);
-        return {tag: it, version: match && match[1]};
-    }).filter(it => it.version);
+    try {
+        const phpRegex = new RegExp('^([7-9]\\.\\d+)-apache$');
+        const client = createClientV2({'name': 'php'});
+        const phpVersions = (await getTags(client)).tags.map(it => {
+            const match = phpRegex.exec(it);
+            return {tag: it, version: match && match[1]};
+        }).filter(it => it.version);
 
-    const nodeVersions = await getNodeLtsVersions();
+        const nodeVersions = await getNodeLtsVersions();
 
-    const docker = new Docker();
+        const docker = new Docker();
 
-    for (let phpVersion of phpVersions) {
-        await buildImages(docker, phpVersion, nodeVersions)
+        for (let phpVersion of phpVersions) {
+            await buildImages(docker, phpVersion, nodeVersions)
+        }
+    } catch (e) {
+        console.error('Build failed: ', e);
+        process.exit(typeof e == 'number' ? e : 1);
     }
 })();
 
@@ -35,7 +40,7 @@ async function buildImages(docker: Docker, phpVersion: PhpVersion, nodeVersions:
 }
 
 async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVersion: NodeVersion, debug: boolean) {
-    const imageName = 'recognizebv/symfony-docker';
+    const imageName = 'recognizebvblaat/symfony-docker';
     const tagName = `php${phpVersion.version}-node${nodeVersion.major}` + (debug ? '-dev' : '');
     const tag = imageName + ':' + tagName;
 
@@ -51,32 +56,6 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
     ], {stdio: 'inherit'});
 
     await new Promise(((resolve, reject) => childProcess.on('close', code => code === 0 ? resolve(code) : reject(code))));
-    //
-    // const stream = await docker.buildImage({
-    //     context: path.resolve(__dirname, '../'),
-    //     src: ['Dockerfile', '000-default.conf', 'apache2.conf', 'mpm_prefork.conf', 'symfony.ini']
-    // }, {
-    //     t: tag,
-    //     buildargs: {
-    //         BASE_IMAGE: `php:${phpVersion.tag}`,
-    //         NODE_VERSION: nodeVersion.version,
-    //         ENABLE_DEBUG: debug ? 'true' : 'false'
-    //     }
-    // });
-    //
-    // await new Promise((resolve, reject) => {
-    //     docker.modem.followProgress(stream, (err, res) => {
-    //         if (err) {
-    //             console.error(`Failed building image ${tag}`, err);
-    //         }
-    //         return err ? reject(err) : resolve(res);
-    //     }, (progress) => {
-    //         const trimmed = progress && progress.stream && progress.stream.trim();
-    //         if (trimmed && trimmed.length > 0 && trimmed.includes('Step ')) {
-    //             console.log(`[${tagName}] ${trimmed}`)
-    //         }
-    //     })
-    // });
 
     await pushImage(docker, imageName, tagName);
 }
