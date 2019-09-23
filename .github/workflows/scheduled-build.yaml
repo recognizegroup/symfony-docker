@@ -1,5 +1,6 @@
 name: Scheduled docker image build
 on:
+  push:
   schedule:
     - cron: '0 12 * * 1'
 
