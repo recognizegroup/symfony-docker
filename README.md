@@ -1,4 +1,4 @@
-![Build status](https://github.com/RecognizeBV/symfony-docker/workflows/Build/badge.svg)
+![Build status](https://github.com/recognizebv/symfony-docker/workflows/Build/badge.svg)
 
 # symfony-docker
 Docker image made to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
