@@ -31,16 +31,17 @@ async function buildImages(docker: Docker, phpVersion: PhpVersion, nodeVersions:
     console.log('Building images for ' + phpVersion.tag);
     // Build non-debug images
     for (let nodeVersion of nodeVersions) {
-        await buildAndPushImage(docker, phpVersion, nodeVersion, false);
-        await buildAndPushImage(docker, phpVersion, nodeVersion, true);
-
+        await buildAndPushImage(docker, phpVersion, nodeVersion, false, false);
+        await buildAndPushImage(docker, phpVersion, nodeVersion, true, false);
+        await buildAndPushImage(docker, phpVersion, nodeVersion, false, true);
+        await buildAndPushImage(docker, phpVersion, nodeVersion, true, true);
     }
     console.log('Done building images for ' + phpVersion.tag);
 }
 
-async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVersion: NodeVersion, debug: boolean) {
+async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVersion: NodeVersion, imageSupport: boolean, debug: boolean) {
     const imageName = 'recognizebv/symfony-docker';
-    const tagName = `php${phpVersion.version}-node${nodeVersion.major}` + (debug ? '-dev' : '');
+    const tagName = `php${phpVersion.version}-node${nodeVersion.major}` + (imageSupport ? '-image' : '') + (debug ? '-dev' : '');
     const tag = imageName + ':' + tagName;
 
 
@@ -50,6 +51,7 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
         '--tag', `${imageName}:${tagName}`,
         '--build-arg', `BASE_IMAGE=php:${phpVersion.tag}`,
         '--build-arg', `NODE_VERSION=${nodeVersion.version}`,
+        '--build-arg', `ENABLE_IMAGE_SUPPORT=${imageSupport ? 'true' : 'false'}`,
         '--build-arg', `ENABLE_DEBUG=${debug ? 'true' : 'false'}`,
         '.'
     ], {stdio: 'inherit'});

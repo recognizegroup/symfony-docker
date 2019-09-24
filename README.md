@@ -4,22 +4,13 @@
 Docker image made to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
 
 ## Available variants
-- php7.3-node10-dev
-- php7.3-node10, 
-- php7.3-node8-dev
-- php7.3-node8
-- php7.2-node10-dev
-- php7.2-node10
-- php7.2-node8-dev
-- php7.2-node8
-- php7.1-node10-dev
-- php7.1-node10
-- php7.1-node8-dev
-- php7.1-node8
-- php7.0-node10-dev
-- php7.0-node10
-- php7.0-node8-dev
-- php7.0-node8
+- php7.0 - php7.3 (PHP Version)
+- -node8, -node10 (Node version)
+- -image (vips and imagick)
+- -dev (XDebug)
+
+example:
+php7.3-node10-image-dev
 
 [All tags](https://hub.docker.com/r/recognizebv/symfony-docker/tags)
 
