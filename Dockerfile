@@ -53,7 +53,7 @@ RUN curl -SLO "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x6
 
 ARG LIBVIPS_VERSION=8.8.3
 ARG ENABLE_IMAGE_SUPPORT=false
-RUN apt-get update \
+RUN $ENABLE_IMAGE_SUPPORT && apt-get update \
  && apt-get install -y --no-install-recommends build-essential pkg-config libglib2.0-dev libexpat1-dev \
  # Image format packages JPEG, EXIF, GIF, Quantized PNG, Text rendering, WebP
  libjpeg62-turbo-dev libexif-dev libgif-dev libpango1.0-dev libwebp-dev libmagickwand-dev \
@@ -72,6 +72,7 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
  && pecl install vips imagick \
  && docker-php-ext-enable vips imagick
+ || true
 
 ARG ENABLE_DEBUG=false
 RUN $ENABLE_DEBUG && pecl install -f xdebug \
