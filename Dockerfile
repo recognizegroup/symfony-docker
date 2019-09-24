@@ -53,7 +53,8 @@ RUN curl -SLO "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x6
 
 ARG LIBVIPS_VERSION=8.8.3
 ARG ENABLE_IMAGE_SUPPORT=false
-RUN $ENABLE_IMAGE_SUPPORT && apt-get update \
+RUN $ENABLE_IMAGE_SUPPORT \
+ && apt-get update \
  && apt-get install -y --no-install-recommends build-essential pkg-config libglib2.0-dev libexpat1-dev \
  # Image format packages JPEG, EXIF, GIF, Quantized PNG, Text rendering, WebP
  libjpeg62-turbo-dev libexif-dev libgif-dev libpango1.0-dev libwebp-dev libmagickwand-dev \
@@ -71,18 +72,19 @@ RUN $ENABLE_IMAGE_SUPPORT && apt-get update \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
  && pecl install vips imagick \
- && docker-php-ext-enable vips imagick
+ && docker-php-ext-enable vips imagick \
  || true
 
 ARG ENABLE_DEBUG=false
-RUN $ENABLE_DEBUG && pecl install -f xdebug \
-     && pecl clear-cache && rm -rf /tmp/pear \
-     && echo "zend_extension=$(ls /usr/local/lib/php/*/*/xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
-     && echo "xdebug.remote_enable = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
-     && echo "xdebug.remote_autostart = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
-     && echo "xdebug.remote_connect_back = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
-     && echo "xdebug.coverage_enable = Off" >> /usr/local/etc/php/conf.d/xdebug.ini \
-     && sed -i.bak "s/opcache.validate_timestamps=0/opcache.validate_timestamps=1/g" /usr/local/etc/php/conf.d/symfony.ini \
-     && sed -i.bak "s/display_errors = 0/display_errors = 1/g" /usr/local/etc/php/conf.d/general.ini \
-     && sed -i.bak "s/display_startup_errors = 0/display_startup_errors = 1/g" /usr/local/etc/php/conf.d/general.ini \
-     || true
+RUN $ENABLE_DEBUG \
+ && pecl install -f xdebug \
+ && pecl clear-cache && rm -rf /tmp/pear \
+ && echo "zend_extension=$(ls /usr/local/lib/php/*/*/xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+ && echo "xdebug.remote_enable = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
+ && echo "xdebug.remote_autostart = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
+ && echo "xdebug.remote_connect_back = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
+ && echo "xdebug.coverage_enable = Off" >> /usr/local/etc/php/conf.d/xdebug.ini \
+ && sed -i.bak "s/opcache.validate_timestamps=0/opcache.validate_timestamps=1/g" /usr/local/etc/php/conf.d/symfony.ini \
+ && sed -i.bak "s/display_errors = 0/display_errors = 1/g" /usr/local/etc/php/conf.d/general.ini \
+ && sed -i.bak "s/display_startup_errors = 0/display_startup_errors = 1/g" /usr/local/etc/php/conf.d/general.ini \
+ || true
