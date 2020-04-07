@@ -7,7 +7,7 @@ import {spawn} from 'child_process';
 
 (async () => {
     try {
-        const phpRegex = new RegExp('^(?:(7\\.[1-9])|([8-9]\\.\\d+))-apache$');
+        const phpRegex = new RegExp(process.argv[2] || '^(?:(7\\.[1-9])|([8-9]\\.\\d+))-apache$');
         const client = createClientV2({'name': 'php'});
         const phpVersions = (await getTags(client)).tags.map(it => {
             const match = phpRegex.exec(it);
