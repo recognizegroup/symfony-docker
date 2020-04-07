@@ -23,4 +23,4 @@ jobs:
       - name: Yarn install
         run: yarn
       - name: Yarn start
-        run: 'yarn start ${{ matrix.php }}'
+        run: 'yarn start "${{ matrix.php }}"'
