@@ -43,7 +43,6 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 # Install composer
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
-    && composer global require "hirak/prestissimo:^0.3" --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative \
     && composer clear-cache\
     && mkdir /var/www/html/public
 
