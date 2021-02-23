@@ -1,17 +1,20 @@
 import {ListTagsResponse, NodeVersion, PhpVersion} from './model';
-import {createClientV2} from 'docker-registry-client';
-import * as compareVersions from 'compare-versions';
-import * as Docker from 'dockerode';
+import compareVersions from 'compare-versions';
+import Docker from 'dockerode';
 import axios from 'axios';
 import {spawn} from 'child_process';
+import {getInput} from "@actions/core";
+import {context, getOctokit} from "@actions/github";
+// @ts-ignore
+import {createClientV2} from 'docker-registry-client';
 
 (async () => {
     try {
         const phpRegex = new RegExp(process.argv[2] || '^(?:(7\\.[1-9])|([8-9]\\.\\d+))-apache$');
         const client = createClientV2({'name': 'php'});
-        const phpVersions = (await getTags(client)).tags.map(it => {
+        const phpVersions: PhpVersion[] = (await getTags(client)).tags.map(it => {
             const match = phpRegex.exec(it);
-            return {tag: it, version: match && match[1]};
+            return {tag: it, version: match && match[1]} as PhpVersion;
         }).filter(it => it.version);
 
         const nodeVersions = await getNodeLtsVersions();
@@ -19,7 +22,8 @@ import {spawn} from 'child_process';
         const docker = new Docker();
 
         for (let phpVersion of phpVersions) {
-            await buildImages(docker, phpVersion, nodeVersions)
+            const imageTags = await buildImages(docker, phpVersion, nodeVersions)
+            await createOrUpdateRelease(phpVersion, imageTags)
         }
     } catch (e) {
         console.error('Build failed: ', e);
@@ -27,16 +31,62 @@ import {spawn} from 'child_process';
     }
 })();
 
+async function createOrUpdateRelease(phpVersion: PhpVersion, imageTags: string[]) {
+    const githubToken = getInput("token", {required: false});
+    if (githubToken) {
+        const octokit = getOctokit(githubToken);
+        const { owner, repo } = context.repo;
+
+        const target_commitish = getInput('commitish', { required: false }) || context.sha;
+        const tag = `php${phpVersion.version}`
+        const existingRelease = await octokit.repos.getReleaseByTag({owner, repo, tag}).then(response => response.data).catch(err => {
+            if (err?.status === 404) {
+                return null
+            }
+            throw err;
+        })
+
+        const body = `Available tags for \`${tag}\`:\n\n` + imageTags.join('\n')
+
+        if (existingRelease === null) {
+            octokit.repos.createRelease({
+                owner,
+                repo,
+                tag_name: tag,
+                target_commitish,
+                name: tag,
+                body
+            })
+        } else {
+            octokit.repos.updateRelease({
+                owner,
+                repo,
+                tag_name: tag,
+                target_commitish,
+                name: tag,
+                body,
+                release_id: existingRelease.id
+            })
+        }
+    } else {
+        console.warn('No INPUT_TOKEN specified, skipping creating release')
+    }
+}
+
 async function buildImages(docker: Docker, phpVersion: PhpVersion, nodeVersions: NodeVersion[]) {
     console.log('Building images for ' + phpVersion.tag);
+    const images = [];
     // Build non-debug images
     for (let nodeVersion of nodeVersions) {
-        await buildAndPushImage(docker, phpVersion, nodeVersion, false, false);
-        await buildAndPushImage(docker, phpVersion, nodeVersion, true, false);
-        await buildAndPushImage(docker, phpVersion, nodeVersion, false, true);
-        await buildAndPushImage(docker, phpVersion, nodeVersion, true, true);
+        images.push(
+            await buildAndPushImage(docker, phpVersion, nodeVersion, false, false),
+            await buildAndPushImage(docker, phpVersion, nodeVersion, true, false),
+            await buildAndPushImage(docker, phpVersion, nodeVersion, false, true),
+            await buildAndPushImage(docker, phpVersion, nodeVersion, true, true)
+        );
     }
     console.log('Done building images for ' + phpVersion.tag);
+    return images;
 }
 
 async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVersion: NodeVersion, imageSupport: boolean, debug: boolean) {
@@ -59,6 +109,7 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
     await new Promise(((resolve, reject) => childProcess.on('close', code => code === 0 ? resolve(code) : reject(code))));
 
     await pushImage(docker, imageName, tagName);
+    return tag
 }
 
 async function pushImage(docker: Docker, imageName: string, tagName: string) {
@@ -66,7 +117,9 @@ async function pushImage(docker: Docker, imageName: string, tagName: string) {
     return new Promise(((resolve, reject) => childProcess.on('close', code => code === 0 ? resolve(code) : reject(code))));
 }
 
-function getTags(client: any): Promise<ListTagsResponse> {
+function getTags(client: {
+    listTags: (cb: (err: any, response: ListTagsResponse) => void) => void
+}): Promise<ListTagsResponse> {
     return new Promise((resolve, reject) => {
         client.listTags((err, response) => {
             if (err) {
@@ -88,13 +141,16 @@ async function getNodeLtsVersions() {
             return compareVersions(a.version, b.version) === -1 ? b : a;
         }, {version: '0.0.0', lts: ''});
 
-        versions.push({
-            version: highestVersion.version,
-            major: highestVersion.version.match(/^v(\d+).+/)[1],
-            lts: highestVersion.lts || ''
-        })
+        const majorMatch = highestVersion.version.match(/^v(\d+).+/)
+        if (majorMatch !== null) {
+            versions.push({
+                version: highestVersion.version,
+                major: majorMatch[1],
+                lts: highestVersion.lts || ''
+            })
+        }
     }
-    return versions.filter(it => Number(it.major) >= 8)
+    return versions.filter(it => Number(it.major) >= 10)
 }
 
 function groupBy<T, K extends keyof T>(items: T[], key: K): { [key: string]: T[] } {

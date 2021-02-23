@@ -26,3 +26,5 @@ jobs:
         run: yarn
       - name: Yarn start
         run: 'yarn start "${{ matrix.php }}"'
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}

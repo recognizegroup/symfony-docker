@@ -5,13 +5,14 @@ Docker image made to run symfony application. Check https://hub.docker.com/r/rec
 
 ## Available variants
 - php7.1 - php7.4 (PHP Version)
-- -node8, -node10 (Node version)
+- -node10, -node-12, -node-14 (Node LTS versions)
 - -image (vips and imagick)
 - -dev (XDebug)
 
 example:
-php7.3-node10-image-dev
+php7.4-node14-image-dev
 
+[List of tags per php version](https://github.com/RecognizeBV/symfony-docker/releases)
 [All tags](https://hub.docker.com/r/recognizebv/symfony-docker/tags)
 
 ## What's here?
