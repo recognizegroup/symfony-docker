@@ -17,7 +17,7 @@ import {createClientV2} from 'docker-registry-client';
             return {
                 tag: it,
                 version: match && match[1],
-                webServer: it.endsWith('fpm') ? WebServerType.NGINX : WebServerType.APACHE,
+                webServer: it.includes('-fpm') ? WebServerType.NGINX : WebServerType.APACHE,
             } as PhpVersion;
         }).filter(it => it.version);
 
