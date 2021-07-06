@@ -14,12 +14,8 @@ jobs:
     strategy:
       matrix:
         php:
-        - '^(7\.2)-apache$'
-        - '^(7\.3)-apache$'
         - '^(7\.4)-apache$'
         - '^(8\.0)-apache$'
-        - '^(7\.2)-fpm'
-        - '^(7\.3)-fpm'
         - '^(7\.4)-fpm'
         - '^(8\.0)-fpm'
     steps:
