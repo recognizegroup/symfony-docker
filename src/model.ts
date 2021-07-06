@@ -12,4 +12,10 @@ export interface NodeVersion {
 export interface PhpVersion {
     version: string;
     tag: string;
+    webServer: string;
+}
+
+export enum WebServerType {
+    APACHE = 'apache',
+    NGINX = 'nginx',
 }

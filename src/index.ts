@@ -1,4 +1,4 @@
-import {ListTagsResponse, NodeVersion, PhpVersion} from './model';
+import {ListTagsResponse, NodeVersion, PhpVersion, WebServerType} from './model';
 import compareVersions from 'compare-versions';
 import Docker from 'dockerode';
 import axios from 'axios';
@@ -10,11 +10,15 @@ import {createClientV2} from 'docker-registry-client';
 
 (async () => {
     try {
-        const phpRegex = new RegExp(process.argv[2] || '^(?:(7\\.[1-9])|([8-9]\\.\\d+))-apache$');
+        const phpRegex = new RegExp(process.argv[2] || '^(?:(7\\.[1-9])|([8-9]\\.\\d+))-(apache|fpm)$');
         const client = createClientV2({'name': 'php'});
         const phpVersions: PhpVersion[] = (await getTags(client)).tags.map(it => {
             const match = phpRegex.exec(it);
-            return {tag: it, version: match && match[1]} as PhpVersion;
+            return {
+                tag: it,
+                version: match && match[1],
+                webServer: it.endsWith('fpm') ? WebServerType.NGINX : WebServerType.APACHE,
+            } as PhpVersion;
         }).filter(it => it.version);
 
         const nodeVersions = await getNodeLtsVersions();
@@ -91,13 +95,13 @@ async function buildImages(docker: Docker, phpVersion: PhpVersion, nodeVersions:
 
 async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVersion: NodeVersion, imageSupport: boolean, debug: boolean) {
     const imageName = 'recognizebv/symfony-docker';
-    const tagName = `php${phpVersion.version}-node${nodeVersion.major}` + (imageSupport ? '-image' : '') + (debug ? '-dev' : '');
+    const tagName = `php${phpVersion.version}${phpVersion.webServer === WebServerType.NGINX ? '-nginx' : ''}-node${nodeVersion.major}` + (imageSupport ? '-image' : '') + (debug ? '-dev' : '');
     const tag = imageName + ':' + tagName;
-
 
     console.log('Building image ' + tag);
     const childProcess = spawn('docker', [
         'build',
+        '-f', phpVersion.webServer === WebServerType.NGINX ? 'nginx/Dockerfile' : 'Dockerfile',
         '--tag', `${imageName}:${tagName}`,
         '--build-arg', `BASE_IMAGE=php:${phpVersion.tag}`,
         '--build-arg', `NODE_VERSION=${nodeVersion.version}`,
