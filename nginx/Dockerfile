@@ -13,8 +13,6 @@ ADD nginx/docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 ADD nginx/docker/php-fpm-app.conf /usr/local/etc/php-fpm.d/php-fpm-app.conf
 ADD symfony.ini /usr/local/etc/php/conf.d/symfony.ini
 
-RUN sed -i 's/user www-data;//g' /etc/nginx/nginx.conf
-
 ENV PHP_FPM_PM="static"
 ENV PHP_FPM_MAX_CHILDREN="20"
 ENV PHP_FPM_START_SERVERS="2"

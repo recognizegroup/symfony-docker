@@ -101,7 +101,7 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
     console.log('Building image ' + tag);
     const childProcess = spawn('docker', [
         'build',
-        '-f', phpVersion.webServer === WebServerType.NGINX ? 'nginx/Dockerfile' : 'Dockerfile',
+        '-f', phpVersion.webServer === WebServerType.NGINX ? 'nginx/Dockerfile' : 'apache/Dockerfile',
         '--tag', `${imageName}:${tagName}`,
         '--build-arg', `BASE_IMAGE=php:${phpVersion.tag}`,
         '--build-arg', `NODE_VERSION=${nodeVersion.version}`,
@@ -136,9 +136,9 @@ function getTags(client: {
 }
 
 async function getNodeLtsVersions() {
-    const response = await axios.get<NodeVersion[]>('https://nodejs.org/dist/index.json');
+    const response = await axios.get<{ version: string, lts: string|boolean }[]>('https://nodejs.org/dist/index.json');
     const groupedVersion = groupBy(response.data.filter(it => it.lts), 'lts');
-    const versions: { version: string, major: string, lts: string }[] = [];
+    const versions: NodeVersion[] = [];
 
     for (let key in groupedVersion) {
         const highestVersion = groupedVersion[key].reduce((a, b) => {
@@ -151,7 +151,7 @@ async function getNodeLtsVersions() {
                 version: highestVersion.version,
                 major: majorMatch[1],
                 lts: highestVersion.lts || ''
-            })
+            } as NodeVersion)
         }
     }
     return versions.filter(it => Number(it.major) >= 10)
