@@ -35,7 +35,7 @@ You can you this docker-compose.yml file to develop:
 
 ```
 www:
-  image: recognizebv/symfony-docker:php7.4-dev
+  image: recognizebv/symfony-docker:php8.0-dev
   volumes:
     - ".:/var/www/html"
   ports:
@@ -70,7 +70,7 @@ path:  "php://stderr"
 You can build production ready image with dockerfile like this:
 
 ```
-FROM recognizebv/symfony-docker:php7.4
+FROM recognizebv/symfony-docker:php8.0
 ADD . /var/www/html
 # Add your application build steps here, for example:
 # RUN ./var/www/html/web/bin/...
