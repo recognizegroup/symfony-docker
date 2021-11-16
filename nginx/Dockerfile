@@ -90,10 +90,6 @@ RUN $ENABLE_DEBUG \
  && pecl install -f xdebug \
  && pecl clear-cache && rm -rf /tmp/pear \
  && echo "zend_extension=$(ls /usr/local/lib/php/*/*/xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
- && echo "xdebug.remote_enable = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
- && echo "xdebug.remote_autostart = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
- && echo "xdebug.remote_connect_back = On" >> /usr/local/etc/php/conf.d/xdebug.ini \
- && echo "xdebug.coverage_enable = Off" >> /usr/local/etc/php/conf.d/xdebug.ini \
  && echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/xdebug.ini \
  && echo "xdebug.discover_client_host = true" >> /usr/local/etc/php/conf.d/xdebug.ini \
  && echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/xdebug.ini \

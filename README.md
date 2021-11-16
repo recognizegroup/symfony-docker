@@ -1,18 +1,17 @@
-![Build status](https://github.com/recognizebv/symfony-docker/workflows/Build/badge.svg)
+[![Build](https://github.com/recognizegroup/symfony-docker/actions/workflows/build.yaml/badge.svg)](https://github.com/recognizegroup/symfony-docker/actions/workflows/build.yaml)
 
 # symfony-docker
 Docker image made to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
 
 ## Available variants
-- php7.1 - php7.4 (PHP Version)
-- -node10, -node-12, -node-14 (Node LTS versions)
+- php7.4 - php8.0 (PHP Version)
+- -node10, -node12, -node14, -node16 (Node LTS versions)
 - -image (vips and imagick)
 - -dev (XDebug)
 
 example:
 php7.4-node14-image-dev
 
-[List of tags per php version](https://github.com/RecognizeBV/symfony-docker/releases)
 [All tags](https://hub.docker.com/r/recognizebv/symfony-docker/tags)
 
 ## What's here?
@@ -36,7 +35,7 @@ You can you this docker-compose.yml file to develop:
 
 ```
 www:
-  image: recognizebv/symfony-docker:php7.1-dev
+  image: recognizebv/symfony-docker:php7.4-dev
   volumes:
     - ".:/var/www/html"
   ports:
@@ -71,7 +70,7 @@ path:  "php://stderr"
 You can build production ready image with dockerfile like this:
 
 ```
-FROM recognizebv/symfony-docker:php7.1
+FROM recognizebv/symfony-docker:php7.4
 ADD . /var/www/html
 # Add your application build steps here, for example:
 # RUN ./var/www/html/web/bin/...
