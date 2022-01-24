@@ -100,7 +100,10 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
 
     console.log('Building image ' + tag);
     const childProcess = spawn('docker', [
+        'buildx',
         'build',
+        '--platform', 'linux/amd64',
+        '--push',
         '-f', phpVersion.webServer === WebServerType.NGINX ? 'nginx/Dockerfile' : 'apache/Dockerfile',
         '--tag', `${imageName}:${tagName}`,
         '--build-arg', `BASE_IMAGE=php:${phpVersion.tag}`,
