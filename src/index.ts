@@ -17,18 +17,20 @@ import {createClientV2} from 'docker-registry-client';
             return {
                 tag: it,
                 version: match && match[1],
+                exactVersion: match && (match[1] + (match[2] || '')),
                 webServer: it.includes('-fpm') ? WebServerType.NGINX : WebServerType.APACHE,
             } as PhpVersion;
         }).filter(it => it.version);
+        const highestPhpVersion = phpVersions.reduce((a, b) => {
+            return compareVersions(a.exactVersion, b.exactVersion) === -1 ? b : a;
+        });
 
         const nodeVersions = await getNodeLtsVersions();
 
         const docker = new Docker();
 
-        for (let phpVersion of phpVersions) {
-            const imageTags = await buildImages(docker, phpVersion, nodeVersions)
-            await createOrUpdateRelease(phpVersion, imageTags)
-        }
+        const imageTags = await buildImages(docker, highestPhpVersion, nodeVersions)
+        await createOrUpdateRelease(highestPhpVersion, imageTags)
     } catch (e) {
         console.error('Build failed: ', e);
         process.exit(typeof e == 'number' ? e : 1);
@@ -95,17 +97,21 @@ async function buildImages(docker: Docker, phpVersion: PhpVersion, nodeVersions:
 
 async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVersion: NodeVersion, imageSupport: boolean, debug: boolean) {
     const imageName = 'recognizebv/symfony-docker';
-    const tagName = `php${phpVersion.version}${phpVersion.webServer === WebServerType.NGINX ? '-nginx' : ''}-node${nodeVersion.major}` + (imageSupport ? '-image' : '') + (debug ? '-dev' : '');
+    const tagSuffix = `${phpVersion.webServer === WebServerType.NGINX ? '-nginx' : ''}-node${nodeVersion.major}` + (imageSupport ? '-image' : '') + (debug ? '-dev' : '');
+    const exactTagName = `php${phpVersion.exactVersion}${tagSuffix}`
+    const tagName = `php${phpVersion.version}${tagSuffix}`
     const tag = imageName + ':' + tagName;
     const architecture = process.argv[3] ?? 'linux/amd64';
 
-    console.log('Building image ' + tag);
+    console.log(`Building image ${tag} with base image version ${phpVersion.exactVersion}`);
     const childProcess = spawn('docker', [
         'buildx',
         'build',
         '--platform', architecture,
         '--push',
         '-f', phpVersion.webServer === WebServerType.NGINX ? 'nginx/Dockerfile' : 'apache/Dockerfile',
+        '--cache-from', `${imageName}:${tagName}`,
+        '--tag', `${imageName}:${exactTagName}`,
         '--tag', `${imageName}:${tagName}`,
         '--build-arg', `BASE_IMAGE=php:${phpVersion.tag}`,
         '--build-arg', `NODE_VERSION=${nodeVersion.version}`,

@@ -11,6 +11,7 @@ export interface NodeVersion {
 
 export interface PhpVersion {
     version: string;
+    exactVersion: string;
     tag: string;
     webServer: string;
 }

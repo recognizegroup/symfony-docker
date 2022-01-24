@@ -23,7 +23,6 @@ RUN pecl install apcu \
     && pecl clear-cache \
     && echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini
 
-
 # Upload settings
 RUN echo "file_uploads = On\n" \
          "memory_limit = 256M\n" \
@@ -44,14 +43,6 @@ ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && mkdir /var/www/html/public
-
-ARG NODE_VERSION
-ARG TARGETARCH
-RUN (curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-$TARGETARCH.tar.xz" || curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz") \
-    && tar -xJf "node.tar.xz" -C /usr/local --strip-components=1 \
-    && rm "node.tar.xz" \
-    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
-    && npm install --global yarn
 
 ARG ENABLE_IMAGE_SUPPORT=false
 RUN $ENABLE_IMAGE_SUPPORT \
@@ -75,3 +66,11 @@ RUN $ENABLE_DEBUG \
  && sed -i.bak "s/display_errors = 0/display_errors = 1/g" /usr/local/etc/php/conf.d/general.ini \
  && sed -i.bak "s/display_startup_errors = 0/display_startup_errors = 1/g" /usr/local/etc/php/conf.d/general.ini \
  || true
+
+ARG NODE_VERSION
+ARG TARGETARCH
+RUN (curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-$TARGETARCH.tar.xz" || curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz") \
+    && tar -xJf "node.tar.xz" -C /usr/local --strip-components=1 \
+    && rm "node.tar.xz" \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+    && npm install --global yarn
