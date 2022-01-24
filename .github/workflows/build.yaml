@@ -19,6 +19,7 @@ jobs:
         - '^(8\.0)-fpm$'
         - '^(8\.1)-fpm$'
     steps:
+      - uses: docker-practice/actions-setup-docker@v1
       - uses: actions/checkout@v1
       - uses: azure/docker-login@v1
         with:
