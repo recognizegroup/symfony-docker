@@ -4,13 +4,13 @@
 Docker image made to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
 
 ## Available variants
-- php7.4 - php8.0 (PHP Version)
+- php7.4, php8.0, php8.1 (PHP Version)
 - -node10, -node12, -node14, -node16 (Node LTS versions)
 - -image (vips and imagick)
 - -dev (XDebug)
 
 example:
-php7.4-node14-image-dev
+php8.1-node16-image-dev
 
 [All tags](https://hub.docker.com/r/recognizebv/symfony-docker/tags)
 
