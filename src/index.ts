@@ -102,7 +102,8 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
     const childProcess = spawn('docker', [
         'buildx',
         'build',
-        '--platform', 'linux/amd64,linux/arm64',
+        '--platform', 'linux/arm64',
+        '--push',
         '-f', phpVersion.webServer === WebServerType.NGINX ? 'nginx/Dockerfile' : 'apache/Dockerfile',
         '--tag', `${imageName}:${tagName}`,
         '--build-arg', `BASE_IMAGE=php:${phpVersion.tag}`,
@@ -116,11 +117,6 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
 
     await pushImage(docker, imageName, tagName);
     return tag
-}
-
-async function pushImage(docker: Docker, imageName: string, tagName: string) {
-    const childProcess = spawn('docker', ['push', `${imageName}:${tagName}`], {stdio: 'inherit'});
-    return new Promise(((resolve, reject) => childProcess.on('close', code => code === 0 ? resolve(code) : reject(code))));
 }
 
 function getTags(client: {
