@@ -2,7 +2,7 @@ name: Build
 on:
   push:
     branches:
-    - feature/RDS-6-m1-architecture
+    - main
   workflow_dispatch:
   schedule:
     - cron: '0 12 * * 1'
