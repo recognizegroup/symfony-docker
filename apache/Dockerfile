@@ -50,7 +50,7 @@ RUN $ENABLE_IMAGE_SUPPORT \
  && apt-get install -y libvips-dev \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
- && pecl install vips imagick \
+ && MAKE="make -j$(nproc)" pecl install vips imagick \
  && docker-php-ext-enable vips imagick \
  || true
 
