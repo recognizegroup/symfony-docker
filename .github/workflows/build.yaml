@@ -21,6 +21,8 @@ jobs:
         - '^(8\.0)-fpm$'
         - '^(8\.1)-fpm$'
     steps:
+      - name: Setup multi-architecture support
+        run: 'docker run --rm --privileged multiarch/qemu-user-static --reset -p yes'
       - uses: actions/checkout@v1
       - uses: azure/docker-login@v1
         with:
