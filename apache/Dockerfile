@@ -46,9 +46,9 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mkdir /var/www/html/public
 
 ARG NODE_VERSION
-RUN curl -SLO "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz" \
-    && tar -xJf "node-$NODE_VERSION-linux-x64.tar.xz" -C /usr/local --strip-components=1 \
-    && rm "node-$NODE_VERSION-linux-x64.tar.xz" \
+RUN (curl -SL -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-$TARGETARCH.tar.xz" || curl -SL -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz") \
+    && tar -xJf "node.tar.xz" -C /usr/local --strip-components=1 \
+    && rm "node.tar.xz" \
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
     && npm install --global yarn
 
