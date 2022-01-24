@@ -115,7 +115,6 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
 
     await new Promise(((resolve, reject) => childProcess.on('close', code => code === 0 ? resolve(code) : reject(code))));
 
-    await pushImage(docker, imageName, tagName);
     return tag
 }
 
