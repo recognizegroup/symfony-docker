@@ -53,24 +53,10 @@ RUN (curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
     && npm install --global yarn
 
-ARG LIBVIPS_VERSION=8.8.3
 ARG ENABLE_IMAGE_SUPPORT=false
 RUN $ENABLE_IMAGE_SUPPORT \
  && apt-get update \
- && apt-get install -y --no-install-recommends build-essential pkg-config libglib2.0-dev libexpat1-dev \
- # Image format packages JPEG, EXIF, GIF, Quantized PNG, Text rendering, WebP
- libjpeg62-turbo-dev libexif-dev libgif-dev libpango1.0-dev libwebp-dev libmagickwand-dev \
- && cd /tmp \
- && curl -L -O https://github.com/libvips/libvips/releases/download/v$LIBVIPS_VERSION/vips-$LIBVIPS_VERSION.tar.gz \
- && tar zxvf vips-$LIBVIPS_VERSION.tar.gz \
- && cd /tmp/vips-$LIBVIPS_VERSION \
- && ./configure \
- && make \
- && make install \
- && ldconfig \
- && apt-get remove -y build-essential \
- && apt-get autoremove -y \
- && apt-get autoclean \
+ && apt-get install -y libvips-dev \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
  && pecl install vips imagick \

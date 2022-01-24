@@ -14,8 +14,10 @@ jobs:
     strategy:
       matrix:
         php:
+        - '^(7\.4)-apache$'
         - '^(8\.0)-apache$'
         - '^(8\.1)-apache$'
+        - '^(7\.4)-fpm$'
         - '^(8\.0)-fpm$'
         - '^(8\.1)-fpm$'
     steps:
@@ -31,6 +33,6 @@ jobs:
       - name: Yarn install
         run: yarn
       - name: Yarn start
-        run: 'yarn start "${{ matrix.php }}"'
+        run: 'yarn start "${{ matrix.php }}" "linux/amd64,linux/arm64"'
         env:
           INPUT_TOKEN: ${{ secrets.GITHUB_TOKEN }}

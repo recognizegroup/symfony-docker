@@ -97,12 +97,13 @@ async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVer
     const imageName = 'recognizebv/symfony-docker';
     const tagName = `php${phpVersion.version}${phpVersion.webServer === WebServerType.NGINX ? '-nginx' : ''}-node${nodeVersion.major}` + (imageSupport ? '-image' : '') + (debug ? '-dev' : '');
     const tag = imageName + ':' + tagName;
+    const architecture = process.argv[3] ?? 'linux/amd64';
 
     console.log('Building image ' + tag);
     const childProcess = spawn('docker', [
         'buildx',
         'build',
-        '--platform', 'linux/amd64,linux/arm64',
+        '--platform', architecture,
         '--push',
         '-f', phpVersion.webServer === WebServerType.NGINX ? 'nginx/Dockerfile' : 'apache/Dockerfile',
         '--tag', `${imageName}:${tagName}`,
