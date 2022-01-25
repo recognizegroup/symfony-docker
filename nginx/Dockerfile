@@ -26,7 +26,7 @@ RUN ( \
        docker-php-ext-configure gd --with-jpeg-dir=/usr/include/ \
        || docker-php-ext-configure gd --with-jpeg \
     ) \
-    && docker-php-ext-install pdo_mysql pdo_pgsql pgsql opcache intl zip gd
+    && docker-php-ext-install -j$(nproc) pdo_mysql pdo_pgsql pgsql opcache intl zip gd
 
 RUN pecl install apcu \
     && pecl clear-cache \
@@ -54,35 +54,13 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && mkdir /var/www/html/public
 
-ARG NODE_VERSION
-ARG TARGETARCH
-RUN (curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-$TARGETARCH.tar.xz" || curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz") \
-    && tar -xJf "node.tar.xz" -C /usr/local --strip-components=1 \
-    && rm "node.tar.xz" \
-    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
-    && npm install --global yarn
-
-ARG LIBVIPS_VERSION=8.8.3
 ARG ENABLE_IMAGE_SUPPORT=false
 RUN $ENABLE_IMAGE_SUPPORT \
  && apt-get update \
- && apt-get install -y --no-install-recommends build-essential pkg-config libglib2.0-dev libexpat1-dev \
- # Image format packages JPEG, EXIF, GIF, Quantized PNG, Text rendering, WebP
- libjpeg62-turbo-dev libexif-dev libgif-dev libpango1.0-dev libwebp-dev libmagickwand-dev \
- && cd /tmp \
- && curl -L -O https://github.com/libvips/libvips/releases/download/v$LIBVIPS_VERSION/vips-$LIBVIPS_VERSION.tar.gz \
- && tar zxvf vips-$LIBVIPS_VERSION.tar.gz \
- && cd /tmp/vips-$LIBVIPS_VERSION \
- && ./configure \
- && make \
- && make install \
- && ldconfig \
- && apt-get remove -y build-essential \
- && apt-get autoremove -y \
- && apt-get autoclean \
+ && apt-get install -y libvips-dev \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
- && pecl install vips imagick \
+ && MAKE="make -j$(nproc)" pecl install vips imagick \
  && docker-php-ext-enable vips imagick \
  || true
 
@@ -110,6 +88,15 @@ RUN usermod -aG www-data www-data \
         && chown -R www-data:www-data /etc/nginx \
         && chmod -R g+w /etc/nginx \
         && apt-get remove --purge --auto-remove -y gnupg1 && rm -rf /var/lib/apt/lists/*
+
+
+ARG NODE_VERSION
+ARG TARGETARCH
+RUN (curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-$TARGETARCH.tar.xz" || curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz") \
+    && tar -xJf "node.tar.xz" -C /usr/local --strip-components=1 \
+    && rm "node.tar.xz" \
+    && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
+    && npm install --global yarn
 
 USER www-data:www-data
 
