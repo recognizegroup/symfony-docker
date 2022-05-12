@@ -3,7 +3,6 @@ on:
   push:
     branches:
     - main
-    - TD-239
   workflow_dispatch:
   schedule:
     - cron: '0 12 * * 1'
