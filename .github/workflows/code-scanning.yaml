@@ -1,0 +1,14 @@
+name: "Code scanning"
+
+on:
+  push:
+    branches: [ develop, main, master, release/*, hotfix/* ]
+  pull_request:
+    branches: [ develop ]
+  schedule:
+    - cron: '0 9 * * 1'
+
+jobs:
+  code-scanning-javascript:
+    name: Perform code scanning (JavaScript)
+    uses: recognizegroup/security/.github/workflows/code-scanning-javascript.yaml@v1
