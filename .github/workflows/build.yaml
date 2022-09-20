@@ -14,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php: # TODO: Undo temp comments
-#        - '^(7\.4)(\.\d+)?-apache$'
-#        - '^(8\.0)(\.\d+)?-apache$'
-#        - '^(8\.1)(\.\d+)?-apache$'
-#        - '^(7\.4)(\.\d+)?-fpm$'
-#        - '^(8\.0)(\.\d+)?-fpm$'
+        php:
+        - '^(7\.4)(\.\d+)?-apache$'
+        - '^(8\.0)(\.\d+)?-apache$'
+        - '^(8\.1)(\.\d+)?-apache$'
+        - '^(7\.4)(\.\d+)?-fpm$'
+        - '^(8\.0)(\.\d+)?-fpm$'
         - '^(8\.1)(\.\d+)?-fpm$'
     steps:
       - name: Setup multi-architecture support
