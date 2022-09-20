@@ -3,6 +3,7 @@ on:
   push:
     branches:
     - main
+    - feature/TD-470 # TODO: Remove temp branch
   workflow_dispatch:
   schedule:
     - cron: '0 12 * * 1'
@@ -13,12 +14,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php:
-        - '^(7\.4)(\.\d+)?-apache$'
-        - '^(8\.0)(\.\d+)?-apache$'
-        - '^(8\.1)(\.\d+)?-apache$'
-        - '^(7\.4)(\.\d+)?-fpm$'
-        - '^(8\.0)(\.\d+)?-fpm$'
+        php: # TODO: Undo temp comments
+#        - '^(7\.4)(\.\d+)?-apache$'
+#        - '^(8\.0)(\.\d+)?-apache$'
+#        - '^(8\.1)(\.\d+)?-apache$'
+#        - '^(7\.4)(\.\d+)?-fpm$'
+#        - '^(8\.0)(\.\d+)?-fpm$'
         - '^(8\.1)(\.\d+)?-fpm$'
     steps:
       - name: Setup multi-architecture support
@@ -29,8 +30,8 @@ jobs:
       - name: Login to registry
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${{ secrets.DOCKER_USERNAME_TEMP }} # TODO: replace temp secret
+          password: ${{ secrets.DOCKER_PASSWORD_TEMP }} # TODO: replace temp secret
       - name: Yarn install
         run: yarn
       - name: Yarn start

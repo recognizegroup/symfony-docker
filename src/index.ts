@@ -96,7 +96,7 @@ async function buildImages(docker: Docker, phpVersion: PhpVersion, nodeVersions:
 }
 
 async function buildAndPushImage(docker: Docker, phpVersion: PhpVersion, nodeVersion: NodeVersion, imageSupport: boolean, debug: boolean) {
-    const imageName = 'recognizebv/symfony-docker';
+    const imageName = 'recognizegroup/symfony-docker';
     const tagSuffix = `${phpVersion.webServer === WebServerType.NGINX ? '-nginx' : ''}-node${nodeVersion.major}` + (imageSupport ? '-image' : '') + (debug ? '-dev' : '');
     const exactTagName = `php${phpVersion.exactVersion}${tagSuffix}`
     const tagName = `php${phpVersion.version}${tagSuffix}`
