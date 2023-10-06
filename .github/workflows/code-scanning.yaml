@@ -7,7 +7,7 @@ on:
 
 jobs:
   analyze:
-    name: Analyze
+    name: Perform code scanning (JavaScript) - Analyze
     runs-on: ubuntu-latest
 
     steps:
