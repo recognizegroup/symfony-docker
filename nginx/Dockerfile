@@ -98,6 +98,4 @@ RUN (curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-
     && ln -s /usr/local/bin/node /usr/local/bin/nodejs \
     && npm install --global yarn
 
-USER www-data:www-data
-
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
