@@ -45,18 +45,16 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mkdir /var/www/html/public
 
 ARG ENABLE_IMAGE_SUPPORT=false
-RUN $ENABLE_IMAGE_SUPPORT \
- && apt-get update \
+RUN if [ "$ENABLE_IMAGE_SUPPORT" = true ]; then apt-get update \
  && apt-get install -y libvips-dev \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
  && MAKE="make -j$(nproc)" pecl install vips imagick \
- && docker-php-ext-enable vips imagick \
- || true
+ && docker-php-ext-enable vips imagick; \
+else echo "Image support is disabled"; fi
 
 ARG ENABLE_DEBUG=false
-RUN $ENABLE_DEBUG \
- && pecl install -f xdebug \
+RUN if [ "$ENABLE_DEBUG" = true ]; then pecl install -f xdebug \
  && pecl clear-cache && rm -rf /tmp/pear \
  && echo "zend_extension=$(ls /usr/local/lib/php/*/*/xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
  && echo "xdebug.mode = develop,debug" >> /usr/local/etc/php/conf.d/xdebug.ini \
@@ -64,9 +62,8 @@ RUN $ENABLE_DEBUG \
  && echo "xdebug.start_with_request = yes" >> /usr/local/etc/php/conf.d/xdebug.ini \
  && sed -i.bak "s/opcache.validate_timestamps=0/opcache.validate_timestamps=1/g" /usr/local/etc/php/conf.d/symfony.ini \
  && sed -i.bak "s/display_errors = 0/display_errors = 1/g" /usr/local/etc/php/conf.d/general.ini \
- && sed -i.bak "s/display_startup_errors = 0/display_startup_errors = 1/g" /usr/local/etc/php/conf.d/general.ini \
- || true
-
+ && sed -i.bak "s/display_startup_errors = 0/display_startup_errors = 1/g" /usr/local/etc/php/conf.d/general.ini; \
+else echo "Debug is disabled"; fi
 ARG NODE_VERSION
 ARG TARGETARCH
 RUN (curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-$TARGETARCH.tar.xz" || curl -SL --fail -o node.tar.xz "https://nodejs.org/dist/$NODE_VERSION/node-$NODE_VERSION-linux-x64.tar.xz") \
