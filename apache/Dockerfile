@@ -51,7 +51,7 @@ ARG ENABLE_IMAGE_SUPPORT=false
 RUN if [ "$ENABLE_IMAGE_SUPPORT" = true ]; then install-php-extensions vips \
  && install-php-extensions Imagick/imagick@7088edc353f53c4bc644573a79cdcd67a726ae16 \
  && docker-php-ext-enable vips imagick; \
-else echo "Image support is disabled"; fi \
+else echo "Image support is disabled"; fi
 
 ARG ENABLE_DEBUG=false
 RUN if [ "$ENABLE_DEBUG" = true ]; then pecl install -f xdebug \
