@@ -32,7 +32,6 @@ RUN pecl install apcu \
     && pecl clear-cache \
     && echo "extension=apcu.so" > /usr/local/etc/php/conf.d/apcu.ini
 
-
 # Upload settings
 RUN echo "file_uploads = On\n" \
          "memory_limit = 256M\n" \
@@ -54,12 +53,12 @@ RUN curl -sS https://getcomposer.org/installer | php \
     && mv composer.phar /usr/local/bin/composer \
     && mkdir /var/www/html/public
 
+ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
+
 ARG ENABLE_IMAGE_SUPPORT=false
-RUN if [ "$ENABLE_IMAGE_SUPPORT" = true ]; then apt-get update \
- && apt-get install -y libvips-dev \
- && apt-get clean \
- && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
- && MAKE="make -j$(nproc)" pecl install vips imagick \
+# We use a specific commit for imagick because php8.3 is not supported by the latest released version (3.7.0)
+RUN if [ "$ENABLE_IMAGE_SUPPORT" = true ]; then install-php-extensions vips \
+ && install-php-extensions Imagick/imagick@7088edc353f53c4bc644573a79cdcd67a726ae16 \
  && docker-php-ext-enable vips imagick; \
 else echo "Image support is disabled"; fi
 

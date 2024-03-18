@@ -3,11 +3,11 @@
     "start": "ts-node src/index.ts"
   },
   "dependencies": {
-    "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0",
+    "@actions/core": "^1.10.1",
+    "@actions/github": "^6.0.0",
     "@types/dockerode": "^3.2.2",
-    "@types/node": "^14.14.31",
-    "axios": "^0.21.1",
+    "@types/node": "^20.0",
+    "axios": "^1.6.8",
     "compare-versions": "^3.5.1",
     "docker-registry-client": "^3.3.0",
     "dockerode": "^3.2.1",

@@ -10,7 +10,7 @@ import {createClientV2} from 'docker-registry-client';
 
 (async () => {
     try {
-        const phpRegex = new RegExp(process.argv[2] || '^(?:(7\\.[1-9])|([8-9]\\.\\d+))-(apache|fpm)$');
+        const phpRegex = new RegExp(process.argv[2] || '^([89]\\.\\d)(\\.\\d+)?-(apache|fpm)$');
         const client = createClientV2({'name': 'php'});
         const phpVersions: PhpVersion[] = (await getTags(client)).tags.map(it => {
             const match = phpRegex.exec(it);
@@ -45,7 +45,7 @@ async function createOrUpdateRelease(phpVersion: PhpVersion, imageTags: string[]
 
         const target_commitish = getInput('commitish', { required: false }) || context.sha;
         const tag = `php${phpVersion.version}`
-        const existingRelease = await octokit.repos.getReleaseByTag({owner, repo, tag}).then(response => response.data).catch(err => {
+        const existingRelease = await octokit.rest.repos.getReleaseByTag({owner, repo, tag}).then(response => response.data).catch(err => {
             if (err?.status === 404) {
                 return null
             }
@@ -55,7 +55,7 @@ async function createOrUpdateRelease(phpVersion: PhpVersion, imageTags: string[]
         const body = `Available tags for \`${tag}\`:\n\n` + imageTags.join('\n')
 
         if (existingRelease === null) {
-            octokit.repos.createRelease({
+            octokit.rest.repos.createRelease({
                 owner,
                 repo,
                 tag_name: tag,
@@ -64,7 +64,7 @@ async function createOrUpdateRelease(phpVersion: PhpVersion, imageTags: string[]
                 body
             })
         } else {
-            octokit.repos.updateRelease({
+            octokit.rest.repos.updateRelease({
                 owner,
                 repo,
                 tag_name: tag,
