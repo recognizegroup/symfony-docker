@@ -1,6 +1,6 @@
 [![Build](https://github.com/recognizegroup/symfony-docker/actions/workflows/build.yaml/badge.svg)](https://github.com/recognizegroup/symfony-docker/actions/workflows/build.yaml)
 
-# symfony-docker
+#  symfony-docker
 Docker image made to run symfony application. Check https://hub.docker.com/r/recognizebv/symfony-docker
 
 ## Available variants
