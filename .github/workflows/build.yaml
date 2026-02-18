@@ -31,7 +31,7 @@ jobs:
         uses: docker/login-action@v3
         with:
           registry: ${{ secrets.DOCKER_REGISTRY }}
-          username: ${{ secrets.DOCKER_USERNAME }}
+          username: ${{ secrets.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Yarn install
         run: yarn
@@ -39,4 +39,4 @@ jobs:
         run: 'yarn start "${{ matrix.php }}" "linux/amd64,linux/arm64"'
         env:
           INPUT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER_REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          DOCKER  _REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
