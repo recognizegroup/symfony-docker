@@ -30,8 +30,8 @@ jobs:
       - name: Login to Azure Container Registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.DOCKER_REGISTRY }}
-          username: ${{ secrets.DOCKER_USER }}
+          registry: ${{ vars.DOCKER_REGISTRY }}
+          username: ${{ vars.DOCKER_USER }}
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Yarn install
         run: yarn
@@ -39,4 +39,4 @@ jobs:
         run: 'yarn start "${{ matrix.php }}" "linux/amd64,linux/arm64"'
         env:
           INPUT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DOCKER  _REGISTRY: ${{ secrets.DOCKER_REGISTRY }}
+          DOCKER_REGISTRY: ${{ vars.DOCKER_REGISTRY }}
