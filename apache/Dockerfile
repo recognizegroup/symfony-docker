@@ -49,7 +49,7 @@ ADD --chmod=0755 https://github.com/mlocati/docker-php-extension-installer/relea
 ARG ENABLE_IMAGE_SUPPORT=false
 # We use a specific commit for imagick because php8.3 is not supported by the latest released version (3.7.0)
 RUN if [ "$ENABLE_IMAGE_SUPPORT" = true ]; then install-php-extensions vips \
- && install-php-extensions Imagick/imagick@7088edc353f53c4bc644573a79cdcd67a726ae16 \
+ && install-php-extensions imagick \
  && docker-php-ext-enable vips imagick; \
 else echo "Image support is disabled"; fi
 
