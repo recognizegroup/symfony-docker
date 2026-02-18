@@ -158,7 +158,7 @@ async function getNodeLtsVersions() {
             } as NodeVersion)
         }
     }
-    return versions.filter(it => Number(it.major) >= 18 && Number(it.major) <= 20)
+    return versions.filter(it => Number(it.major) >= 18 && Number(it.major) <= 22)
 }
 
 function groupBy<T, K extends keyof T>(items: T[], key: K): { [key: string]: T[] } {
